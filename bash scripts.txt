@@ -1,0 +1,43 @@
+search by username
+
+
+#!/bin/bash
+
+# Prompt user to enter a username
+read -p "Enter the username to search for: " username
+
+# Check if the user exists in the /etc/passwd file
+user_info=$(grep "^$username:" /etc/passwd)
+
+if [ -n "$user_info" ]; then
+    echo "User $username exists."
+    echo "Details:"
+    echo "$user_info"
+else
+    echo "User $username does not exist on the system."
+fi
+
+-------------------------------------------------------------------------------
+
+search by filename
+
+echo "Enter file name:"
+read filename
+path=$(find ~/ -name "$filename")
+if [ -f "$filename" ]; then
+echo "$filename exists in $path"
+else
+echo "$filename doesnot exists, please create a new one"
+fi
+
+------------------------------------------------------------------------------------------------------
+math functions:
+
+echo "Enter the value:"
+read Number
+if [ $Number -gt 10 ]; then
+echo "The given value is $Number and it is greater than 10"
+else
+echo "The given value is $Number and it is less than 10"
+fi
+-----------------------------------------------------------------------------------------------------------
