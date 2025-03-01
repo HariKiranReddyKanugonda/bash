@@ -1,1 +1,33 @@
+Defining Variables: Use variable_name="value".
+Accessing Variables: Use $variable_name.
+No Spaces Around = when defining variables.
+Array Variables: Hold multiple values, accessed with ${array[index]}.
+Environment Variables: Made available to child processes using export.
+Arithmetic Operations: Use $(( )) for arithmetic calculations.
+String Operations: Can concatenate, find lengths, and extract substrings.
+Advanced Expansion: Useful for setting default values and trimming spaces.
 
+
+Example Script Using Variables:
+bash
+#!/bin/bash
+
+# Define variables
+greeting="Hello"
+name="World"
+
+# Concatenate strings
+full_message="$greeting, $name!"
+
+# Display the message
+echo $full_message  # Outputs: Hello, World!
+
+# Perform arithmetic
+num1=5
+num2=3
+sum=$((num1 + num2))
+echo "The sum of $num1 and $num2 is $sum."  # Outputs: The sum of 5 and 3 is 8.
+
+# Read user input
+read -p "Enter your favorite color: " color
+echo "Your favorite color is $color."
