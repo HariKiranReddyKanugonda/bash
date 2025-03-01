@@ -68,3 +68,26 @@ greet() {
 
 # Calling the function with a name argument
 greet "Alice"  # This will print "Hello, Alice!"
+
+
+Explanation Inside the Script:
+
+Shebang (#!/bin/bash):
+Indicates that the script should be executed using the Bash shell.
+
+Variables:
+file_name="sample.txt": Declares a variable to hold the file name.
+line_count=0: Declares a variable to store the count of lines, initialized to 0.
+
+Conditional (if [ -f "$file_name" ]; then):
+Checks if the specified file (sample.txt) exists.
+If the file exists, the script enters the if block and counts the lines.
+
+Command Substitution (line_count=$(wc -l < "$file_name")):
+Uses wc -l to count the number of lines in the file, with the result stored in line_count.
+
+Loop (for i in {1..5}; do):
+A simple for loop that iterates over a range of numbers from 1 to 5, printing each number.
+
+Function (greet() {...}):
+Defines a function greet() that takes one argument (a name) and prints a greeting message using that argument.
