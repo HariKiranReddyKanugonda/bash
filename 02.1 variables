@@ -12,7 +12,7 @@ Types of Variables
 Bash supports several types of variables, though they are all essentially strings under the hood. These are:
 Local Variables: Variables defined in a script or function and are accessible only within that scope.  #name="Alice"   # Local variable
 Global Variables: Variables defined outside any function, which are accessible throughout the entire script.
-Environment Variables: Variables that are available to processes spawned by the script. we can make a variable available globally by exporting it.
+Environment Variables: Variables that are available to processes spawned by the script. we can make a variable available globally by exporting it. #export PATH="/usr/local/bin:$PATH"
 Special Variables: Bash has several predefined variables that hold special meanings. 
 For example:
 $? – The exit status of the last command executed.
