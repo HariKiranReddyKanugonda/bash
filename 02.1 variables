@@ -21,8 +21,41 @@ $0 – The name of the script itself.
 $1, $2, ..., $n – Positional parameters for the arguments passed to a script or function.
 $* and $@ – All the arguments passed to the script.
 
+Using Variables in Commands
+Variables can be used within commands by referencing them with $. This is useful when passing dynamic values to commands, such as file paths or user input
 
+Variable Substitution
+Bash supports variable substitution, where the value of a variable can be substituted in place of the variable name
 
+Reading User Input
+we can assign user input to a variable using the read command #read -p "Enter your name: " name
+
+Working with Arrays
+Bash allows us to work with arrays, which are essentially variables that hold multiple values.
+
+Read-Only Variables
+You can make a variable read-only, meaning it can't be modified after being set #readonly pi=3.14
+
+Arithmetic Operations
+Bash allows you to perform arithmetic operations using the $(( )) syntax:
+#a=10
+#b=5
+#sum=$((a + b))   # Adds a and b
+#echo $sum        # Prints: 15
+
+String Operations
+Concatenating Strings: You can concatenate strings by simply placing them next to each other
+String Length: Use ${#variable} to get the length of a string
+Substring: You can extract substrings using ${variable:start:length}
+
+Unsetting Variables
+We can delete a variable using the unset command
+
+Variable Expansion (Advanced)
+Bash also supports advanced variable expansion techniques. Here are some examples:
+Default Value: If a variable is unset or null, use a default value  #echo ${name:-"Default Name"}  # Prints Default Name if $name is not set
+Assign Default Value: If a variable is unset or null, assign a default value  #name=${name:-"Default Name"}  # Assigns Default Name if $name is not set
+Remove Leading/Trailing Whitespaces.  #var="  Hello  " #echo "${var// /}"  # Removes all spaces
 
 
 
