@@ -1,3 +1,36 @@
+Defining Variables:
+In Bash, variables are defined by simply assigning a value to a name. #name="Alice" 
+No spaces are allowed around the equal sign (=).  #age=25
+Variable names should only contain letters (a-z, A-Z), numbers (0-9), and underscores (_).
+Variable names cannot start with a number.
+
+Accessing Variable Values:
+To access the value stored in a variable, we use the dollar sign ($) followed by the variable name #echo $name 
+we can also use curly braces to access variables in more complex expression  #echo "Name: ${name}, Age: ${age}"  # Prints: Name: Alice, Age: 25
+
+Types of Variables
+Bash supports several types of variables, though they are all essentially strings under the hood. These are:
+
+Local Variables: Variables defined in a script or function and are accessible only within that scope.  #name="Alice"   # Local variable
+Global Variables: Variables defined outside any function, which are accessible throughout the entire script.
+Environment Variables: Variables that are available to processes spawned by the script. we can make a variable available globally by exporting it.
+Special Variables: Bash has several predefined variables that hold special meanings. 
+For example:
+$? – The exit status of the last command executed.
+$# – The number of arguments passed to the script or function.
+$0 – The name of the script itself.
+$1, $2, ..., $n – Positional parameters for the arguments passed to a script or function.
+$* and $@ – All the arguments passed to the script.
+
+
+
+
+
+
+
+
+
+
 Defining Variables: Use variable_name="value".
 Accessing Variables: Use $variable_name.
 No Spaces Around = when defining variables.
