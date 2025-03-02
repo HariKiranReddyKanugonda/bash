@@ -1,1 +1,102 @@
+Data Types:
+
+In Bash scripting, data types are a bit different compared to languages like Python, Java, or C. 
+Bash does not explicitly declare types for variables. 
+Instead, it relies on the context in which a variable is used to infer its type. Bash has a limited number of "types" of data, but understanding them is essential for writing effective scripts. 
+Let's dive into the details:
+
+STRING
+In Bash, everything can be treated as a string. Strings are the most common data type and are used to represent sequences of characters.
+
+Definition: A string is a sequence of characters enclosed in either single (') or double (") quotes.
+  string1="Hello, World!"
+  string2='This is a string'
+Handling: Bash doesn't enforce any special data structures for strings. You can perform operations like concatenation, length checking, and searching using commands or built-in operations:
+  string1="Hello"
+  string2="World"
+  combined="$string1 $string2"
+  echo $combined  # Outputs: Hello World
+we can also use the declare command to define string variables explicitly:
+  declare -r my_string="This is a constant string"
+
+INTEGERS(Number)
+Bash handles numbers, but they are treated as strings internally. The distinction between strings and numbers becomes clear when performing arithmetic operations.
+
+Definition: An integer is a numeric value, and Bash can handle both signed and unsigned integers.
+  number=42
+  another_number=-7
+Handling: If you're performing arithmetic operations with numbers, Bash will interpret them as integers. You can use the let command, ((...)) syntax, or expr to perform arithmetic:
+  a=5
+  b=10
+  sum=$((a + b))
+  echo $sum  # Outputs: 15
+
+Note that let, expr, and ((...)) expect numbers and treat strings as numeric if possible, but strings that cannot be converted to numbers will result in an error.
+
+
+ARRAYS:
+Bash supports one-dimensional arrays (though they don't strictly enforce data types within arrays). Arrays are used to store multiple values in a single variable.
+
+Definition: An array is a list of values, which can be indexed by integers (starting from 0).
+  # Declare an array
+  my_array=("apple" "banana" "cherry")
+
+  # Accessing array elements
+  echo ${my_array[0]}  # Outputs: apple
+
+  # Modify array elements
+  my_array[1]="blueberry"
+  echo ${my_array[1]}  # Outputs: blueberry
+
+  # Length of array
+  echo ${#my_array[@]}  # Outputs: 3
+
+We can also use associative arrays (introduced in Bash 4.0), which allow you to use strings as keys instead of numeric indices:
+
+  declare -A my_assoc_array
+  my_assoc_array["key1"]="value1"
+  my_assoc_array["key2"]="value2"
+
+  echo ${my_assoc_array["key1"]}  # Outputs: value1
+
+BOOLEAN (True/False)
+Bash doesn’t have an explicit bool data type like other programming languages, but you can work with boolean values using integers (0 for true, non-zero for false) or exit statuses of commands.
+
+Definition: A command or expression that returns 0 (success) is considered true, and a non-zero return code (failure) is considered false.
+
+  if [ $x -eq 0 ]; then
+      echo "x is zero"
+  else
+      echo "x is non-zero"
+  fi
+
+0 is true (success), meaning the test condition passed.
+Non-zero (e.g., 1) is false (failure), meaning the test condition failed
+
+File Descriptors and Special Variables
+Bash treats file handles and special variables like $?, $0, $#, and $@ in unique ways:
+
+File Descriptors: When interacting with files or processes, Bash uses file descriptors. For example, file descriptor 0 represents standard input (stdin), 1 represents standard output (stdout), and 2 represents standard error (stderr).
+
+Example:
+  exec 3>file.txt  # Open file.txt for writing and assign it to file descriptor 3
+  echo "Hello" >&3  # Write to file descriptor 3 (file.txt)
+
+Special Variables:
+
+$? holds the exit status of the last executed command.
+$0 is the name of the script.
+$# holds the number of arguments passed to the script.
+$@ holds all the arguments passed to the script.
+
+Floating-Point Numbers
+Bash does not directly support floating-point arithmetic, but you can work with floating-point numbers using external utilities such as bc (a calculator utility) or awk.
+
+Example with bc:
+  result=$(echo "scale=2; 5 / 3" | bc)
+  echo $result  # Outputs: 1.66
+
+Example with awk:
+result=$(awk "BEGIN {print 5 / 3}")
+echo $result  # Outputs: 1.6666666666666667
 
