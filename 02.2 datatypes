@@ -100,3 +100,11 @@ Example with awk:
 result=$(awk "BEGIN {print 5 / 3}")
 echo $result  # Outputs: 1.6666666666666667
 
+Summary of Data Types in Bash:
+
+String: A sequence of characters, treated as text (e.g., "Hello").
+Integer: Whole numbers, used for arithmetic operations (e.g., 42).
+Array: A collection of values, accessed by an index (e.g., my_array[1]).
+Boolean: Determined by exit status of commands (e.g., 0 is true, 1 is false).
+File Descriptors: Special variables to handle file inputs/outputs.
+Floating Point Numbers: Handled with external tools like bc or awk.
