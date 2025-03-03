@@ -1,4 +1,6 @@
-Control structures in Bash scripting allow you to control the flow of execution based on certain conditions or loops. These are essential for making decisions, repeating actions, and handling different scenarios in your script. Bash provides several types of control structures, including **conditional statements**, **loops**, and **case statements**.
+Control structures in Bash scripting allow you to control the flow of execution based on certain conditions or loops. 
+These are essential for making decisions, repeating actions, and handling different scenarios in your script. 
+Bash provides several types of control structures, including **conditional statements**, **loops**, and **case statements**.
 
 Let's explore these control structures in detail:
 
