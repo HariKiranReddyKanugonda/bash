@@ -1,1 +1,191 @@
+Regular expressions (regex) and pattern matching are powerful tools used in Bash scripting to search, match, and manipulate text. They are particularly useful when working with files, strings, or outputs that need to be filtered or processed based on patterns.
 
+In Bash scripting, regular expressions and pattern matching are commonly used with commands like `grep`, `sed`, `awk`, and even Bash's own built-in string operations. Below is a detailed explanation of how regular expressions and pattern matching work in Bash scripting:
+
+### 1. **Basic Pattern Matching in Bash**
+
+Bash supports **glob patterns** (wildcards), which are simpler than regular expressions but still allow basic pattern matching. Glob patterns are used by commands like `ls`, `cp`, `rm`, and `mv`.
+
+#### a. **Basic Glob Patterns**
+- `*`: Matches zero or more characters.
+  
+  ls *.txt  # Matches all files with .txt extension
+  
+  
+- `?`: Matches exactly one character.
+  
+  ls file?.txt  # Matches file1.txt, file2.txt, etc.
+  
+  
+- `[]`: Matches any single character within the square brackets.
+  
+  ls file[1-3].txt  # Matches file1.txt, file2.txt, file3.txt
+  
+  
+- `!`: Negates the pattern inside `[]`.
+  
+  ls file[!1].txt  # Matches all files except file1.txt
+  
+
+#### b. **Pattern Matching with `[[ ... ]]` in Bash**
+
+Bash's built-in `[[ ... ]]` provides enhanced pattern matching compared to the basic `[` test command. It supports pattern matching in conditional statements and comparisons.
+
+
+filename="hello.txt"
+if [[ $filename == *.txt ]]; then
+  echo "This is a text file"
+fi
+
+- The `==` operator in `[[ ... ]]` performs pattern matching and will match the string with the wildcard pattern.
+- You can use `==` with wildcards (`*`, `?`, `[]`), but not full regular expressions.
+
+### 2. **Regular Expressions (Regex) in Bash**
+
+Regular expressions are more powerful than glob patterns and are often used in conjunction with tools like `grep`, `sed`, `awk`, and Bash's built-in regex capabilities. Regular expressions provide a way to define search patterns with more complex conditions.
+
+#### a. **Basic Regex Syntax**
+
+- `.`: Matches any single character except a newline.
+  
+  echo "hello" | grep "h.llo"  # Matches "hello"
+  
+
+- `*`: Matches zero or more occurrences of the previous character or group.
+  
+  echo "helloooo" | grep "hell*o"  # Matches "helloooo"
+  
+
+- `^`: Anchors the regex to the start of the string.
+  
+  echo "hello" | grep "^h"  # Matches "hello" because it starts with "h"
+  
+
+- `$`: Anchors the regex to the end of the string.
+  
+  echo "hello" | grep "o$"  # Matches "hello" because it ends with "o"
+  
+
+- `[]`: Matches any one character within the square brackets.
+  
+  echo "hello" | grep "[aeiou]"  # Matches any word containing a vowel
+  
+
+- `|`: Acts as a logical OR between two patterns.
+  
+  echo "hello" | grep "h|o"  # Matches "h" or "o"
+  
+
+- `\`: Escapes a special character, so it is treated literally.
+  
+  echo "5+3=8" | grep "5\+3"  # Matches "5+3" literally
+  
+
+#### b. **Extended Regular Expressions (ERE)**
+
+Some tools in Bash, like `grep -E`, `sed`, and `awk`, support **extended regular expressions (ERE)**, which offer more powerful features than basic regular expressions (BRE). These include:
+- `+`: Matches one or more occurrences of the previous element (in ERE only).
+- `?`: Matches zero or one occurrence of the previous element (in ERE only).
+- `()` and `|`: Grouping and logical OR are available without escaping (in ERE only).
+
+Example of using ERE with `grep -E`:
+
+echo "hello 123 world 456" | grep -E "hello|world"  # Matches "hello" or "world"
+
+
+### 3. **Using Regular Expressions with Commands**
+
+#### a. **`grep` (Global Regular Expression Print)**
+
+`grep` is a command-line utility that searches for patterns within files or input streams. It uses regular expressions to search for and print matching lines.
+
+- **Basic Usage**: 
+  
+  grep "pattern" filename
+  
+
+- **Using Extended Regular Expressions (`-E`)**:
+  
+  grep -E "pattern" filename  # Uses extended regular expressions
+  
+
+- **Case-insensitive search (`-i`)**:
+  
+  grep -i "pattern" filename  # Matches regardless of case
+  
+
+- **Invert match (`-v`)**:
+  
+  grep -v "pattern" filename  # Matches lines that do NOT contain the pattern
+  
+
+- **Search for a pattern in a file**:
+  
+  echo "hello world" | grep "world"  # Output: "hello world"
+  
+
+- **Matching at the beginning of the line**:
+  
+  grep "^hello" filename  # Matches lines starting with "hello"
+  
+
+#### b. **`sed` (Stream Editor)**
+
+`sed` is a stream editor used for transforming text in a pipeline. You can use regular expressions to perform substitutions, deletions, and insertions.
+
+- **Basic substitution**:
+  
+  echo "hello world" | sed 's/hello/hi/'  # Replaces "hello" with "hi"
+  
+
+- **Using extended regex (`-E`) for complex patterns**:
+  
+  echo "hello 123" | sed -E 's/[0-9]+/number/'  # Replaces digits with "number"
+  
+
+- **In-place editing (`-i`)**:
+  
+  sed -i 's/old/new/g' filename  # Replace "old" with "new" in the file
+  
+
+#### c. **`awk` (Pattern Scanning and Processing Language)**
+
+`awk` is another powerful text processing tool in Bash that uses regular expressions to match and process text.
+
+- **Basic example**:
+  
+  echo "apple orange banana" | awk '/orange/ {print $1}'  # Prints "apple"
+  
+
+- **Using regular expressions in `awk`**:
+  
+  echo "apple 100 orange 200 banana 300" | awk '/[0-9]+/ {print $2}'
+  # Outputs: 100 200 300
+  
+
+### 4. **Using Regex in Bash Scripts**
+
+You can incorporate regular expressions directly in Bash scripts to automate pattern matching. Bash provides built-in support for regex with the `[[ ... ]]` construct.
+
+- **Using `[[ ... ]]` for regex matching**:
+  
+  string="hello123"
+  if [[ $string =~ [0-9]+ ]]; then
+    echo "String contains digits"
+  fi
+  
+
+- **Extracting parts of a string** using regex in Bash:
+  
+  string="hello123"
+  if [[ $string =~ ([a-z]+)([0-9]+) ]]; then
+    echo "Letters: ${BASH_REMATCH[1]}"  # "hello"
+    echo "Digits: ${BASH_REMATCH[2]}"   # "123"
+  fi
+  
+
+### 5. **Conclusion**
+
+Regular expressions and pattern matching are vital for text manipulation in Bash scripting. While Bash offers simpler wildcard pattern matching through globbing, regular expressions provide a much more flexible and powerful way to match complex patterns. By combining tools like `grep`, `sed`, `awk`, and Bash’s built-in regex capabilities, you can efficiently process and analyze text data in scripts.
+
+If you have any specific questions or need examples for particular tasks, feel free to ask!
