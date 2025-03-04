@@ -1,1 +1,205 @@
+Error handling in Bash scripting is a crucial aspect of creating reliable and robust scripts. By properly handling errors, you can ensure that your script behaves as expected, even when things go wrong. Error handling in Bash can involve detecting errors, managing exit statuses, and using mechanisms like traps and `set` options to control how the script reacts to failures.
 
+### 1. **Exit Status and Error Codes**
+Every command in Bash returns an **exit status** (also known as a return code or exit code), which indicates whether the command was successful or if it encountered an error.
+
+- **Exit Status of a Command**: The exit status of a command is stored in the special variable `$?`.
+  - An exit status of `0` generally indicates **success**.
+  - A non-zero exit status indicates **failure**. Different commands may use different non-zero values to indicate specific types of errors.
+
+  Example:
+  
+  command  # Run a command
+  echo $?  # Print the exit status of the last command
+  
+
+### 2. **Checking Exit Status After Each Command**
+One of the most common methods of error handling in Bash scripts is to check the exit status of commands using `$?`.
+
+#### Example:
+
+#!/bin/bash
+
+mkdir /path/to/directory  # Try to create a directory
+
+if [ $? -eq 0 ]; then
+  echo "Directory created successfully."
+else
+  echo "Error: Failed to create directory."
+fi
+
+
+Here, the script checks the exit status of the `mkdir` command. If the command was successful (`$? -eq 0`), it prints a success message. Otherwise, it prints an error message.
+
+### 3. **Using `set -e` to Exit on Errors**
+You can use `set -e` (also known as **errexit**) to make your script exit immediately if any command returns a non-zero exit status. This is useful for scripts that should not continue running if an error occurs.
+
+#### Example:
+
+#!/bin/bash
+
+set -e  # Exit on any error
+
+echo "Step 1: Creating a directory"
+mkdir /path/to/directory  # If this fails, the script will exit here
+
+echo "Step 2: Creating a file"
+touch /path/to/directory/file.txt  # If this fails, the script will exit here
+
+
+In the above example, if the `mkdir` command fails, the script will exit immediately and not proceed to the next step. Similarly, if `touch` fails, the script will stop without further execution.
+
+- To **disable `set -e` temporarily**, use `set +e`:
+  
+  set +e  # Disable immediate exit on error
+  
+
+### 4. **Using `set -u` to Detect Undefined Variables**
+Bash scripts often encounter errors when they reference variables that haven't been set. To catch this kind of error, you can use `set -u` (also known as **nounset**). This option makes the script exit with an error message if you try to use an unset variable.
+
+#### Example:
+
+#!/bin/bash
+
+set -u  # Exit on uninitialized variables
+
+echo $undefined_variable  # This will cause an error
+
+
+### 5. **Using `trap` to Handle Signals and Errors**
+The `trap` command allows you to specify a function or command to be executed when the script receives a signal or encounters an error. This is particularly useful for cleaning up resources (like temporary files) when the script terminates unexpectedly.
+
+#### Example of trapping errors:
+
+#!/bin/bash
+
+# Define a cleanup function
+cleanup() {
+  echo "Cleaning up temporary files..."
+  rm -f /tmp/tempfile
+}
+
+# Set trap to call cleanup on exit or error
+trap cleanup EXIT  # This will run the cleanup function on exit or on an error
+
+echo "Creating a temporary file"
+touch /tmp/tempfile
+
+# Simulate an error
+echo "Simulating an error"
+exit 1  # This will trigger the EXIT trap
+
+
+In the above script, the `trap` command will call the `cleanup` function when the script exits, whether successfully or due to an error.
+
+#### Trapping specific signals:
+You can also trap specific signals, such as `SIGINT` (which is sent when you press Ctrl+C), `SIGTERM`, and others:
+
+trap "echo 'Script interrupted!'; exit 1" SIGINT
+
+
+This will catch the `SIGINT` signal (which is sent when you press Ctrl+C) and display a custom message before exiting the script with an error code.
+
+### 6. **Using `||` and `&&` for Error Handling**
+In Bash, you can chain commands with `&&` (AND) and `||` (OR) operators to create conditional logic for error handling.
+
+- **`&&`**: Runs the second command only if the first command succeeds (exit status 0).
+- **`||`**: Runs the second command only if the first command fails (non-zero exit status).
+
+#### Example of using `&&` and `||`:
+
+mkdir /path/to/directory && echo "Directory created successfully" || echo "Failed to create directory"
+
+
+Here:
+- If `mkdir` is successful, it will print `"Directory created successfully"`.
+- If `mkdir` fails, it will print `"Failed to create directory"`.
+
+### 7. **Custom Error Handling Functions**
+To make your script more reusable and clean, you can define custom error-handling functions.
+
+#### Example of a custom error function:
+
+#!/bin/bash
+
+# Define an error handling function
+handle_error() {
+  echo "Error: $1"
+  exit 1  # Exit with a non-zero status
+}
+
+echo "Step 1: Creating a directory"
+mkdir /path/to/directory || handle_error "Failed to create directory"
+
+echo "Step 2: Creating a file"
+touch /path/to/directory/file.txt || handle_error "Failed to create file"
+
+
+In this example:
+- The `handle_error` function is invoked if any command fails. It prints an error message and exits the script.
+
+### 8. **Using `try` and `catch`-like Patterns**
+While Bash doesn't natively support `try`/`catch` blocks like some other programming languages, you can simulate this pattern by using functions and `trap` combined with custom error handling.
+
+#### Example of a `try/catch`-like pattern:
+
+#!/bin/bash
+
+try() {
+  "$@"  # Run the command passed as an argument to the try function
+  local status=$?  # Capture the exit status
+  if [[ $status -ne 0 ]]; then
+    catch $status  # Call catch if the command failed
+  fi
+}
+
+catch() {
+  echo "Error occurred! Exit status: $1"
+  exit 1
+}
+
+# Simulate trying a command
+try mkdir /path/to/directory
+try touch /path/to/directory/file.txt
+
+
+### 9. **Handling Multiple Errors**
+When you have a sequence of commands in a script, handling multiple errors becomes important. You can either handle them individually after each command or define a broader strategy to catch all errors in the script.
+
+#### Example:
+
+#!/bin/bash
+
+# Handling multiple errors
+step1() {
+  mkdir /path/to/directory || { echo "Error: Step 1 failed"; exit 1; }
+}
+
+step2() {
+  touch /path/to/directory/file.txt || { echo "Error: Step 2 failed"; exit 1; }
+}
+
+step1
+step2
+
+
+### 10. **Logging Errors**
+It's often a good idea to log errors for debugging purposes, especially in production scripts. You can log errors to a file using `>>` to append output to a file.
+
+#### Example:
+
+#!/bin/bash
+
+log_file="/tmp/script.log"
+
+log_error() {
+  echo "$(date) - $1" >> "$log_file"
+}
+
+mkdir /path/to/directory || { log_error "Failed to create directory"; exit 1; }
+
+
+In this example, if the `mkdir` command fails, it logs the error to the log file with the current timestamp.
+
+### Conclusion
+Effective error handling in Bash scripting is essential for creating robust scripts that can handle unexpected conditions gracefully. By checking the exit status of commands, using `set` options like `-e` and `-u`, employing `trap` for signal handling, and implementing custom error-handling functions, you can build scripts that not only handle errors but also provide useful feedback and logs for debugging and troubleshooting.
